@@ -1,0 +1,31 @@
+spring:
+  sql:
+    init:
+      mode: always   # never или always
+      continue-on-error: true  # Игнорировать ошибки DROP при первом запуске
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/XEPDB1
+    username: SYSTEM_ADMINISTRATOR
+    password: 2307Kata
+    driver-class-name: oracle.jdbc.OracleDriver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      validation-timeout: 5000
+      idle-timeout: 300000
+      max-lifetime: 600000
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+logging:
+  level:
+    root: INFO
+    com.ru.fintracker: DEBUG
+    org.springframework.jdbc.core: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"

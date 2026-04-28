@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} ?: 'Финансовый трекер'">Финансовый трекер</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { box-shadow: 0 2px 4px RGBA(0,0,0,0.1); }
+        .amount-income { color: #198754; font-weight: 600; }
+        .amount-expense { color: #dc3545; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-primary mb-4">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">🏠 Финансовый трекер</a>
+        <div class="d-flex gap-2">
+            <a th:href="@{/}" class="btn btn-outline-light btn-sm">📊 Главная</a>
+            <a th:href="@{/transactions}" class="btn btn-outline-light btn-sm">📋 Операции</a>
+            <a th:href="@{/transactions/new}" class="btn btn-outline-light btn-sm">➕ Добавить</a>
+            <a th:href="@{/trash}" class="btn btn-outline-light btn-sm">🗑 Корзина</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container">
+    <!-- Flash-сообщения -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${pageContent != null}" th:insert="${pageContent}"></div>
+</main>
+
+<footer class="text-center text-muted py-4 mt-5">
+    <small>Финансовый трекер • Экзаменационный проект</small>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

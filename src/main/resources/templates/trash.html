@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>🗑️ Корзина</h2>
+        <a th:href="@{/transactions}" class="btn btn-outline-secondary">← Назад к операциям</a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div th:if="${#lists.isEmpty(transactions)}" class="text-center py-4">
+                <p class="text-muted mb-0">Корзина пуста</p>
+            </div>
+            <table th:if="${!#lists.isEmpty(transactions)}" class="table table-hover">
+                <thead class="table-light">
+                <tr><th>Дата</th><th>Тип</th><th>Категория</th><th class="text-end">Сумма</th><th>Комментарий</th><th class="text-center">Действия</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="t : ${transactions}">
+                    <td th:text="${#temporals.format(t.transactionDate, 'dd.MM.yyyy')}"></td>
+                    <td>
+                        <span th:if="${t.type == 'INCOME'}" class="badge bg-success">Доход</span>
+                        <span th:if="${t.type == 'EXPENSE'}" class="badge bg-danger">Расход</span>
+                    </td>
+                    <td th:text="${t.categoryName != null ? t.categoryName : '—'}">—</td>
+                    <td class="text-end"><span th:text="${#numbers.formatDecimal(t.amount, 1, 2, 'POINT')} + ' ' + ${t.currency}"></span></td>
+                    <td th:text="${#strings.abbreviate(t.transactionComment, 30)}">—</td>
+                    <td class="text-center">
+                        <form th:action="@{/trash/{id}/restore(id=${t.id})}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-success">↩️ Восстановить</button>
+                        </form>
+                        <form th:action="@{/trash/{id}/delete(id=${t.id})}" method="post"
+                              class="d-inline" onsubmit="return confirm('Удалить навсегда? Это действие нельзя отменить!')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">🗑️ Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

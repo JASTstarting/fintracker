@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📊 Финансовый обзор</h2>
+        <!-- Форма фильтрации периода и валюты -->
+        <form class="d-flex gap-2 align-items-center" method="get" action="/">
+            <label>
+                <select name="currency" class="form-select form-select-sm" style="width: 80px;">
+                    <option value="">Все</option>
+                    <option value="RUB" th:selected="${selectedCurrency == 'RUB'}">RUB</option>
+                    <option value="USD" th:selected="${selectedCurrency == 'USD'}">USD</option>
+                    <option value="EUR" th:selected="${selectedCurrency == 'EUR'}">EUR</option>
+                </select>
+            </label>
+
+            <span class="text-muted">—</span>
+
+            <label>
+                <input type="date" class="form-control form-control-sm" name="from"
+                       th:value="${periodFrom != null ? #temporals.format(periodFrom, 'yyyy-MM-dd') : ''}">
+            </label>
+            <span class="text-muted">—</span>
+            <label>
+                <input type="date" class="form-control form-control-sm" name="to"
+                       th:value="${periodTo != null ? #temporals.format(periodTo, 'yyyy-MM-dd') : ''}">
+            </label>
+
+            <button type="submit" class="btn btn-sm btn-primary">📊 Показать</button>
+        </form>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card text-bg-success">
+                <div class="card-body">
+                    <h6 class="card-title">💰 Доходы</h6>
+                    <p class="card-text display-6" th:text="${summary.safeIncome} + ' ₽'">0 ₽</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-bg-danger">
+                <div class="card-body">
+                    <h6 class="card-title">💸 Расходы</h6>
+                    <p class="card-text display-6" th:text="${summary.safeExpense} + ' ₽'">0 ₽</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" th:classappend="${summary.safeBalance >= 0} ? 'text-bg-success' : 'text-bg-danger'">
+                <div class="card-body">
+                    <h6 class="card-title">⚖️ Баланс</h6>
+                    <p class="card-text display-6" th:text="${summary.safeBalance} + ' ₽'">0 ₽</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h5 class="mb-0">🕐 Последние операции</h5>
+            <a th:href="@{/transactions}" class="btn btn-sm btn-outline-primary">Все операции →</a>
+        </div>
+        <div class="card-body p-0">
+            <div th:if="${#lists.isEmpty(lastTransactions)}" class="text-center py-4">
+                <p class="text-muted mb-0">Нет операций</p>
+            </div>
+            <table th:if="${!#lists.isEmpty(lastTransactions)}" class="table table-hover mb-0">
+                <thead class="table-light">
+                <tr><th>Дата</th><th>Тип</th><th>Категория</th><th>Сумма</th><th>Комментарий</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="t : ${lastTransactions}">
+                    <td th:text="${#temporals.format(t.transactionDate, 'dd.MM.yyyy')}"></td>
+                    <td>
+                        <span th:if="${t.type == 'INCOME'}" class="badge bg-success">Доход</span>
+                        <span th:if="${t.type == 'EXPENSE'}" class="badge bg-danger">Расход</span>
+                    </td>
+                    <td th:text="${t.categoryName != null ? t.categoryName : '—'}">—</td>
+                    <td th:text="${#numbers.formatDecimal(t.amount, 1, 2, 'POINT')} + ' ' + ${t.currency}"></td>
+                    <td th:text="${#strings.abbreviate(t.transactionComment, 30)}">—</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2 mt-4">
+        <a th:href="@{/transactions/new?type=INCOME}" class="btn btn-success">➕ Добавить доход</a>
+        <a th:href="@{/transactions/new?type=EXPENSE}" class="btn btn-danger">➖ Добавить расход</a>
+    </div>
+</div>
+
+</body>
+</html>

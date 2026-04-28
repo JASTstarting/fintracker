@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="content">
+    <div class="text-center py-5">
+        <h1 class="display-1 text-danger">⚠️</h1>
+        <h2 class="mb-4">Произошла ошибка</h2>
+
+        <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}">
+            Текст ошибки
+        </div>
+
+        <div th:if="${errorDetails}" class="alert alert-secondary small text-start">
+            <strong>Детали:</strong> <span th:text="${errorDetails}"></span>
+        </div>
+
+        <div class="mt-4">
+            <a th:href="@{/transactions}" class="btn btn-primary">
+                <i class="bi bi-house"></i> Вернуться к списку операций
+            </a>
+            <a href="/" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> На главную
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
